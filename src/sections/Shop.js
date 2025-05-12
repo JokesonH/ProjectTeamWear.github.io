@@ -115,7 +115,7 @@ const ContentWrapper = styled.div`
 const Right = styled.div`
   position: absolute;
   left: 35%;
-  padding-left: 30%;
+  /* padding-left: 30%; */
   min-height: 100vh;
 
   background-color: ${(props) => props.theme.grey};
@@ -266,44 +266,39 @@ const Shop = () => {
   const horizontalRef = useRef(null);
 
   useLayoutEffect(() => {
-    let element = ref.current;
-    let scrollingElement = horizontalRef.current;
-    let pinWrapWidth = scrollingElement.offsetWidth;
-
-    let t1 = gsap.timeline();
-    setTimeout(() => {
-      t1.to(element, {
-        scrollTrigger: {
-          trigger: element,
-          start: "top top",
-          end: pinWrapWidth,
-          scroller: ".App",
-          scrub: true,
-          pin: true,
-        },
-        height: `${scrollingElement.scrollWidth}px`,
-        ease: "none",
-      });
-
-      t1.to(scrollingElement, {
-        scrollTrigger: {
-          trigger: scrollingElement,
-          start: "top top",
-          end: pinWrapWidth,
-          scroller: ".App",
-          scrub: true,
-        },
-        x: -pinWrapWidth,
-        ease: "none",
-      });
-      ScrollTrigger.refresh();
-    }, 1000);
-
+    const element = ref.current;
+    const scrollingElement = horizontalRef.current;
+    // total scrollable width minus viewport width:
+    const totalScroll = scrollingElement.scrollWidth - window.innerWidth;
+  
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: element,
+        start: "top top",
+        end: () => `+=${scrollingElement.scrollWidth}`,
+        scrub: true,
+        pin: true,
+        scroller: ".App"
+      }
+    });
+  
+    tl.to(element, {
+      height: `${scrollingElement.scrollWidth}px`,
+      ease: "none"
+    });
+  
+    tl.to(scrollingElement, {
+      x: -totalScroll,
+      ease: "none"
+    });
+  
+    ScrollTrigger.refresh();
     return () => {
-      t1.kill();
+      tl.kill();
       ScrollTrigger.kill();
     };
   }, []);
+  
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

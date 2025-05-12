@@ -375,18 +375,6 @@ const Shop = () => {
           title="Kentucky Stags"
           models={[img20, img21]}
         />
-        <Product
-          title="Sherwood Park Crusaders"
-          models={[img22, img23]} // Replace with your actual model images
-        />
-        <Product
-          title="Canadian National Womens Team"
-          models={[img24, img25,img26,img27]}
-        />
-        <Product
-          title="Kentucky State University"
-          models={[img28]}
-        />
       </Right>
     </Section>
   );
